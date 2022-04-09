@@ -34,7 +34,8 @@ public class Main extends Application {
     private Random rand = new Random();
     Runnable northSouthGo;
     Runnable eastWestGo;
-    Runnable allStop;
+    Runnable northSouthStop;
+    Runnable eastWestStop;
 	
 	@Override
 	public void start(Stage stage) {
@@ -81,17 +82,18 @@ public class Main extends Application {
                 WBRed.setFill(Color.color(0.7, 0, 0));
                 WBGreen.setFill(Color.color(0, 1, 0));
             };
-            allStop = () -> {
+            northSouthStop = () -> {
                 NBRed.setFill(Color.color(1, 0, 0));
                 NBGreen.setFill(Color.color(0, 0.5, 0));
-                EBRed.setFill(Color.color(1, 0, 0));
-                EBGreen.setFill(Color.color(0, 0.5, 0));
                 SBRed.setFill(Color.color(1, 0, 0));
                 SBGreen.setFill(Color.color(0, 0.5, 0));
+            };
+            eastWestStop = () -> {
+                EBRed.setFill(Color.color(1, 0, 0));
+                EBGreen.setFill(Color.color(0, 0.5, 0));
                 WBRed.setFill(Color.color(1, 0, 0));
                 WBGreen.setFill(Color.color(0, 0.5, 0));
             };
-            allStop.run();
             
 			Label signature = new Label(" Made by Nicholas Moorman\n nicholas.v.moorman@gmail.com");
 			signature.setTextAlignment(TextAlignment.CENTER);
@@ -107,9 +109,11 @@ public class Main extends Application {
 			
 			if (Math.random() < 0.5) {
                 northSouthGo.run();
+                eastWestStop.run();
                 new NSLightService().start();
             } else {
                 eastWestGo.run();
+                northSouthStop.run();
                 new EWLightService().start();
             }
             
@@ -124,7 +128,7 @@ public class Main extends Application {
     private class NSLightService extends Service<Void> {
         private NSLightService() {
             setOnSucceeded((WorkerStateEvent e) -> {
-                allStop.run();
+                northSouthStop.run();
                 new RedLightService(false).start();
             });
         }
@@ -146,7 +150,7 @@ public class Main extends Application {
     private class EWLightService extends Service<Void> {
         private EWLightService() {
             setOnSucceeded((WorkerStateEvent e) -> {
-                allStop.run();
+                eastWestStop.run();
                 new RedLightService(true).start();
             });
         }
