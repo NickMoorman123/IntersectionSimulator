@@ -1,4 +1,4 @@
-module Nonogrammatica {
+module IntersectionSimulator {
 	requires javafx.controls;
 	requires javafx.graphics;
 	requires javafx.web;
